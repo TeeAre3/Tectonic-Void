@@ -25,13 +25,16 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable () => controls.Player.Disable();
     private void OnDestroy() => controls.Dispose();
 
-    void Update()
+    private void Update()
     {
         moveInput = controls.Player.Move.ReadValue<Vector2>(); 
     }
 
+    public bool MovementLocked { get; set; }
     private void FixedUpdate()
     {
+        if (MovementLocked) return;
+
         Vector3 velocity = rb.linearVelocity;
         Vector3 horizontal = new Vector3(velocity.x, 0f, velocity.z);
         Vector3 desired = new Vector3(moveInput.x, 0f, moveInput.y) * maxSpeed;
