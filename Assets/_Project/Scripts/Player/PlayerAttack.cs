@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Globalization;
 
-[RequireComponent(typeof(PlayerMovement), typeof(PlayerDash))]
+[RequireComponent(typeof(Rigidbody), typeof(PlayerMovement), typeof(PlayerDash))]
 public class PlayerAttack : MonoBehaviour
 {
     private enum Phase { Idle, Windup, Active, Recovery}
@@ -17,6 +17,12 @@ public class PlayerAttack : MonoBehaviour
     [Header("Hit detection")]
     [SerializeField] private LayerMask hitMask = ~0;
 
+    [Header("Aim assist")]
+    [SerializeField] private bool assistEnabled = true;
+    [SerializeField] private float assistRange = 3f;
+    [SerializeField] private float assistHalfAngle = 60f;
+
+    private Rigidbody rb;
     private PlayerMovement movement;
     private PlayerDash dash;
     private PlayerControls controls;
@@ -33,6 +39,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         movement = GetComponent<PlayerMovement>();
         dash = GetComponent<PlayerDash>();
         controls = new PlayerControls();
@@ -109,6 +116,8 @@ public class PlayerAttack : MonoBehaviour
         movement.SpeedMultiplier = current.moveSpeedMultiplier;
         movement.RotationLocked = true;
 
+        AimAtTarget();
+
         Debug.Log($"Light attack {index + 1}"); //temporary
         EnterPhase(Phase.Windup, current.windup);
     }
@@ -138,6 +147,53 @@ public class PlayerAttack : MonoBehaviour
         current = null;
         movement.SpeedMultiplier = 1f;
         movement.RotationLocked = false;
+    }
+
+    private void AimAtTarget()
+    {
+        Vector2 input = controls.Player.Move.ReadValue<Vector2>();
+        Vector3 aimDir = input.sqrMagnitude > 0.01f ? new Vector3(input.x, 0f, input.y).normalized : transform.forward;
+
+        Vector3 faceDir = aimDir;
+        if (assistEnabled && TryFindAssistTarget(aimDir, out Vector3 toTarget))
+            faceDir = toTarget;
+        Quaternion look = Quaternion.LookRotation(faceDir);
+        rb.rotation = look;
+        transform.rotation = look;
+    }
+
+    private bool TryFindAssistTarget(Vector3 aimDir, out Vector3 direction)
+    {
+        direction = aimDir;
+        Collider[] cols = Physics.OverlapSphere(transform.position, assistRange, hitMask, QueryTriggerInteraction.Ignore);
+
+        float bestScore = float.MaxValue;
+        bool found = false;
+
+        foreach(Collider col in cols)
+        {
+            Health health = col.GetComponentInParent<Health>();
+            if (health == null || health.IsDead || health.gameObject == gameObject) continue;
+
+            Vector3 to = health.transform.position - transform.position;
+            to.y = 0f;
+            float dist = to.magnitude;
+            if (dist < 0.01f) continue;
+            to /= dist;
+
+            float angle = Vector3.Angle(aimDir, to);
+            if (angle > assistHalfAngle) continue;
+
+            float score = (angle / assistHalfAngle) * 0.6f + (dist / assistRange) * 0.4f;
+            if(score < bestScore)
+            {
+                bestScore = score;
+                direction = to;
+                found = true;
+            }
+        }
+
+        return found;
     }
 
     private void DealDamage()
@@ -171,5 +227,11 @@ public class PlayerAttack : MonoBehaviour
                     : Color.grey;
         Gizmos.matrix = Matrix4x4.TRS(transform.position + transform.forward * (current.range * 0.5f), transform.rotation, Vector3.one);
         Gizmos.DrawWireCube(Vector3.zero, new Vector3(current.width, current.height, current.range));
+    }
+
+    private void OnGizmosSelected()
+    {
+        Gizmos.color = new Color(0f, 1f, 1f, 0.4f);
+        Gizmos.DrawWireSphere(transform.position, assistRange);
     }
 }

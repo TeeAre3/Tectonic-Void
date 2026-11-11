@@ -165,7 +165,7 @@ MonoBehaviour:
   maxSpeed: 7
   acceleration: 60
   deceleration: 80
-  turnSpeed: 720
+  turnSpeed: 1080
 --- !u!114 &821667904564690670
 MonoBehaviour:
   m_ObjectHideFlags: 0
