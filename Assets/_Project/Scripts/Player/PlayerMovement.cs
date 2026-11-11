@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = new Vector3(horizontal.x, velocity.y, horizontal.z);
         rb.angularVelocity = Vector3.zero;
 
-        if(hasInput && RotationLocked)
+        if(hasInput && !RotationLocked)
         {
             Quaternion target = Quaternion.LookRotation(new Vector3(moveInput.x, 0f, moveInput.y));
             rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, target, turnSpeed * Time.fixedDeltaTime));

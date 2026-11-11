@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: -9091989625640724519}
   - component: {fileID: -20812973478379775}
   - component: {fileID: 1801496871978223795}
+  - component: {fileID: 4782832393814042299}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -229,6 +230,27 @@ MonoBehaviour:
   iFramesAfterHit: 0.22
   destroyOnDeath: 0
   logChanges: 1
+--- !u!114 &4782832393814042299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800926509984413320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 108b07dcf0e2b754193b3696c425e624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  lightCombo:
+  - {fileID: 11400000, guid: c958e8d8347c75d4580281b34fca06f8, type: 2}
+  - {fileID: 11400000, guid: d181899ca1ac58a4fba7b01ccd87ec65, type: 2}
+  - {fileID: 11400000, guid: 60d1f054bbe7b47489e6d296b2f234b6, type: 2}
+  comboResetTime: 0.5
+  inputBuffer: 0.2
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &4559603752626027393
 GameObject:
   m_ObjectHideFlags: 0
