@@ -233,6 +233,17 @@
                 },
                 {
                     "name": "",
+                    "id": "a528256d-dbf5-4c91-ab92-19092acac802",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LightAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "434b8bc4-a251-4d61-9461-aaa94ecd674c",
                     "path": "<Keyboard>/e",
                     "interactions": "",
