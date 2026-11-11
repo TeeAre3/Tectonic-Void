@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(BoxCollider))]
@@ -16,6 +17,7 @@ public class Platform : MonoBehaviour
 
     private BoxCollider boxCollider;
     private Vector3 targetPosition;
+    private Vector2 heldInput;
 
     public bool IsMoving { get; private set; }
 
@@ -50,7 +52,27 @@ public class Platform : MonoBehaviour
         {
             transform.position = targetPosition;
             IsMoving = false;
+
+            if(heldInput != Vector2.zero)
+            {
+                TryPush(heldInput);
+            }
         }
+    }
+
+    public void SetHeldInput(Vector2 input)
+    {
+        heldInput = input;
+
+        if(!IsMoving && input != Vector2.zero)
+        {
+            TryPush(input);
+        }
+    }
+
+    public void ReleaseHold()
+    {
+        heldInput = Vector2.zero;
     }
 
     public bool TryPush(Vector2 direction)

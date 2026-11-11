@@ -7,7 +7,7 @@ public class PlatformControl : MonoBehaviour
     [SerializeField] private InputActionReference platformMoveAction;
 
     private PlatformRider rider;
-    private Vector2 previousInput;
+    private Platform heldPlatform;
 
     private void Awake()
     {
@@ -24,6 +24,8 @@ public class PlatformControl : MonoBehaviour
 
     private void OnDisable()
     {
+        ReleaseHeldPlatform();
+
         if(platformMoveAction != null)
         {
             platformMoveAction.action.Disable();
@@ -36,12 +38,30 @@ public class PlatformControl : MonoBehaviour
 
         Vector2 input = platformMoveAction.action.ReadValue<Vector2>();
 
-        bool isNewPress = previousInput == Vector2.zero && input != Vector2.zero;
-        previousInput = input;
+        if (input == Vector2.zero)
+        {
+            ReleaseHeldPlatform();
+            return;
+        }
 
-        if (!isNewPress) return;
-        if (rider.CurrentPlatform == null) return;
+        Platform current = rider.CurrentPlatform;
 
-        rider.CurrentPlatform.TryPush(input);
+        if (heldPlatform == null || (!heldPlatform.IsMoving && current != null && current != heldPlatform))
+        {
+            ReleaseHeldPlatform();
+            heldPlatform = current;
+        }
+
+        if (heldPlatform == null) return;
+
+        heldPlatform.SetHeldInput(input);
+    }
+
+    private void ReleaseHeldPlatform()
+    {
+        if (heldPlatform == null) return;
+
+        heldPlatform.ReleaseHold();
+        heldPlatform = null;
     }
 }
