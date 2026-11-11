@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5970150224492994309}
   - component: {fileID: 3076250093348767749}
   - component: {fileID: 5032217275507658491}
+  - component: {fileID: -9091989625640724519}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -161,6 +162,25 @@ MonoBehaviour:
   acceleration: 60
   deceleration: 80
   turnSpeed: 720
+--- !u!114 &-9091989625640724519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800926509984413320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f58e404e8eb8641bf4d70cfdde4724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  dashDistance: 5
+  dashDuration: 0.18
+  dashCooldown: 0.6
+  exitSpeed: 8
+  iFrameDuration: 0.22
+  inputBuffer: 0.12
+  debugRenderer: {fileID: 0}
 --- !u!1 &4559603752626027393
 GameObject:
   m_ObjectHideFlags: 0
