@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody), typeof(PlayerMovement))]
-public class PlayerDash : MonoBehaviour
+public class PlayerDash : MonoBehaviour, IInvulnerabilityProvider
 {
     [Header("Dash")]
     [SerializeField] private float dashDistance = 5f;

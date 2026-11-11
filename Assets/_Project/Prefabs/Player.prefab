@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3076250093348767749}
   - component: {fileID: 5032217275507658491}
   - component: {fileID: -9091989625640724519}
+  - component: {fileID: -20812973478379775}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -180,7 +181,23 @@ MonoBehaviour:
   exitSpeed: 8
   iFrameDuration: 0.22
   inputBuffer: 0.12
-  debugRenderer: {fileID: 0}
+  tintDuringIFrames: 1
+--- !u!114 &-20812973478379775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800926509984413320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ed95686f49144341a7a48cd6f1e510c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 100
+  iFramesAfterHit: 0.5
+  destroyOnDeath: 0
+  logChanges: 1
 --- !u!1 &4559603752626027393
 GameObject:
   m_ObjectHideFlags: 0
