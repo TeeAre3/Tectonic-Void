@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91f8ee9b1c31f44ab602c0073da71ee, type: 3}
   m_Name: Light3
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
-  damage: 10
+  damage: 15
   knockbackForce: 0
-  windup: 0.08
-  active: 0.1
-  recovery: 0.18
-  range: 1.8
-  width: 1.6
+  windup: 0.12
+  active: 0.12
+  recovery: 0.35
+  range: 2.2
+  width: 2
   height: 1.5
-  moveSpeedMultiplier: 0.25
+  moveSpeedMultiplier: 0.15

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackData
   damage: 10
   knockbackForce: 0
-  windup: 0.08
+  windup: 0.07
   active: 0.1
   recovery: 0.18
   range: 1.8
