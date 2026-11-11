@@ -31,13 +31,15 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public bool MovementLocked { get; set; }
+    public bool RotationLocked { get; set; }
+    public float SpeedMultiplier { get; set; } = 1f;
     private void FixedUpdate()
     {
         if (MovementLocked) return;
 
         Vector3 velocity = rb.linearVelocity;
         Vector3 horizontal = new Vector3(velocity.x, 0f, velocity.z);
-        Vector3 desired = new Vector3(moveInput.x, 0f, moveInput.y) * maxSpeed;
+        Vector3 desired = new Vector3(moveInput.x, 0f, moveInput.y) * maxSpeed * SpeedMultiplier;
 
         bool hasInput = moveInput.sqrMagnitude > 0.01f;
         float rate = hasInput ? acceleration : deceleration;
@@ -46,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = new Vector3(horizontal.x, velocity.y, horizontal.z);
         rb.angularVelocity = Vector3.zero;
 
-        if(hasInput )
+        if(hasInput && !RotationLocked)
         {
             Quaternion target = Quaternion.LookRotation(new Vector3(moveInput.x, 0f, moveInput.y));
             rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, target, turnSpeed * Time.fixedDeltaTime));
