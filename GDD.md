@@ -76,17 +76,17 @@ Zamiast standardowego współczynnika poczytalności, gracz posiada wskaźnik **
 | `W`, `S`, `A`, `D` | Poruszanie postacią | Ruch po płaszczyźnie platformy |
 | `Strzałki` | Przesuwanie platformy | Przesuwa platformę, na której aktualnie stoi gracz |
 | `Q` | Lekki atak bronią białą | Podstawowy combo-atak |
-| `E` *(lub Przytrzymanie Q)* | Ciężki atak bronią białą / specjalny | Wolniejszy, ale potężniejszy cios |
+| *(Przytrzymanie `Q`)* | Ciężki atak bronią białą / specjalny | Wolniejszy, ale potężniejszy cios |
 | `X` | Zmiana broni | Przełączanie broni lub szybki skrót do stabilizacji |
 | `F` | Interakcja | Otwieranie skrzyń, aktywacja konsoli, podnoszenie przedmiotów |
-| `Spacja` / `Shift` | Unik / Dash | Zapewnia ramki nietykalności (*i-frames*) |
+| `Spacja` / `Shift` / `Ctrl` | Unik / Dash | Zapewnia ramki nietykalności (*i-frames*) |
 | `R` | Zastrzyk Stabilizujący / Zaklęcie | Użycie sedatywu w celu usunięcia macek z platformy |
 
 ### Układ na padzie (Controller Layout – *do ewentualnej poprawy*)
 * **Lewy Analog:** Ruch postaci
 * **Prawy Analog (lub D-Pad):** Ruch platformą
-* **X:** Atak
-* **A:** Dash
+* **X:** Tap: Lekki atak, Hold: Ciężki atak
+* **B:** Dash
 * **RB:** Broń palna / spell / Interakcja *(do rozdzielenia)*
 * **Y:** Stabilizacja
 
