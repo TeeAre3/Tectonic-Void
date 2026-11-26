@@ -32,7 +32,8 @@ public class Platform : MonoBehaviour
         body.isKinematic = true;
         body.useGravity = false;
 
-        tileColliders = GetComponentsInChildren<BoxCollider>();
+        tileColliders = System.Array.FindAll(
+            GetComponentsInChildren<BoxCollider>(), c => !c.isTrigger);
         targetPosition = transform.position;
     }
 
