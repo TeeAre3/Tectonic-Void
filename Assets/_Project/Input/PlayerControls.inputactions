@@ -32,7 +32,7 @@
                     "id": "6ede32e7-e53e-44c8-be34-46280f398412",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap(duration=0.3)",
                     "initialStateCheck": true,
                     "priority": 0
                 },
@@ -42,7 +42,7 @@
                     "id": "a1ddc782-d8f3-4cef-a056-fa98e9b99a71",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.3)",
                     "initialStateCheck": false,
                     "priority": 0
                 },
@@ -245,7 +245,18 @@
                 {
                     "name": "",
                     "id": "434b8bc4-a251-4d61-9461-aaa94ecd674c",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HeavyAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d06a4731-e43c-403f-a7e5-c5839a2dab2c",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

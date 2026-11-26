@@ -246,11 +246,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c958e8d8347c75d4580281b34fca06f8, type: 2}
   - {fileID: 11400000, guid: d181899ca1ac58a4fba7b01ccd87ec65, type: 2}
   - {fileID: 11400000, guid: 60d1f054bbe7b47489e6d296b2f234b6, type: 2}
+  heavyAttack: {fileID: 11400000, guid: fc86d12b27451124097b19dec9da73c9, type: 2}
   comboResetTime: 0.5
   inputBuffer: 0.2
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  assistEnabled: 1
+  assistRange: 3
+  assistHalfAngle: 60
 --- !u!1 &4559603752626027393
 GameObject:
   m_ObjectHideFlags: 0
