@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Platform : MonoBehaviour
@@ -24,6 +23,8 @@ public class Platform : MonoBehaviour
     private Vector2 heldInput;
 
     public bool IsMoving { get; private set; }
+    public bool Locked { get; set; }
+    public event System.Action<Platform> Pushed;
 
     private void Awake()
     {
@@ -81,6 +82,7 @@ public class Platform : MonoBehaviour
 
     public bool TryPush(Vector2 direction)
     {
+        if (Locked) return false;
         if (IsMoving) return false;
         if (direction == Vector2.zero) return false;
 
@@ -93,6 +95,7 @@ public class Platform : MonoBehaviour
 
         targetPosition = transform.position + dir * distance;
         IsMoving = true;
+        Pushed?.Invoke(this);
         return true;
     }
 

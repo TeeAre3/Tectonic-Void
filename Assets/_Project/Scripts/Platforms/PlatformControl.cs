@@ -46,6 +46,12 @@ public class PlatformControl : MonoBehaviour
 
         Platform current = rider.CurrentPlatform;
 
+        if(current == null)
+        {
+            ReleaseHeldPlatform();
+            return;
+        }
+
         if (heldPlatform == null || (!heldPlatform.IsMoving && current != null && current != heldPlatform))
         {
             ReleaseHeldPlatform();
