@@ -34,7 +34,7 @@ public class PlatformRider : MonoBehaviour
 
         if(Physics.Raycast(bounds.center, Vector3.down, out RaycastHit hit, rayLength, platformLayer, QueryTriggerInteraction.Ignore))
         {
-            detected = hit.collider.GetComponent<Platform>();
+            detected = hit.collider.GetComponentInParent<Platform>();
         }
 
         if (detected == CurrentPlatform) return;
