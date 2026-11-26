@@ -12,6 +12,7 @@ public class PlatformRider : MonoBehaviour
     private Rigidbody body;
 
     public Platform CurrentPlatform { get; private set; }
+    public Vector3 PlatformVelocity => CurrentPlatform != null ? CurrentPlatform.Velocity : Vector3.zero;
 
     private void Awake()
     {

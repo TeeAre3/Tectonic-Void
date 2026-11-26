@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-100)]  
 [RequireComponent(typeof(Rigidbody))]
 public class Platform : MonoBehaviour
 {
@@ -15,51 +16,53 @@ public class Platform : MonoBehaviour
     [Tooltip("Distance covered by one step. Should match the tile size used to build platforms.")]
     [SerializeField] private float stepSize = 4f;
 
-    private BoxCollider[] tileColliders;
-
     private readonly HashSet<PlatformRider> riders = new HashSet<PlatformRider>();
 
+    private Rigidbody body;
+    private BoxCollider[] tileColliders;
+    private Vector3 logicalPosition;   
     private Vector3 targetPosition;
     private Vector2 heldInput;
 
     public bool IsMoving { get; private set; }
     public bool Locked { get; set; }
+    public Vector3 Velocity { get; private set; }
     public event System.Action<Platform> Pushed;
 
     private void Awake()
     {
-        Rigidbody body = GetComponent<Rigidbody>();
+        body = GetComponent<Rigidbody>();
         body.isKinematic = true;
         body.useGravity = false;
+        body.interpolation = RigidbodyInterpolation.Interpolate;
 
         tileColliders = System.Array.FindAll(
             GetComponentsInChildren<BoxCollider>(), c => !c.isTrigger);
-        targetPosition = transform.position;
+
+        logicalPosition = body.position;
+        targetPosition = logicalPosition;
     }
 
     private void FixedUpdate()
     {
-        if (!IsMoving) return;
-
-        Vector3 previousPosition = transform.position;
-        Vector3 newPosition = Vector3.MoveTowards(previousPosition, targetPosition, slideSpeed * Time.fixedDeltaTime);
-        Vector3 delta = newPosition - previousPosition;
-
-        transform.position = newPosition;
-
-        Physics.SyncTransforms();
-
-        foreach (PlatformRider rider in riders)
+        if (!IsMoving)
         {
-            rider.Carry(delta);
+            Velocity = Vector3.zero;
+            return;
         }
 
-        if ((targetPosition - newPosition).sqrMagnitude < 0.0001f)
+        Vector3 next = Vector3.MoveTowards(logicalPosition, targetPosition,
+                                           slideSpeed * Time.fixedDeltaTime);
+        Velocity = (next - logicalPosition) / Time.fixedDeltaTime;
+
+        logicalPosition = next;
+        body.MovePosition(next);
+
+        if ((targetPosition - next).sqrMagnitude < 0.0001f)
         {
-            transform.position = targetPosition;
             IsMoving = false;
 
-            if(heldInput != Vector2.zero)
+            if (heldInput != Vector2.zero)
             {
                 TryPush(heldInput);
             }
@@ -70,7 +73,7 @@ public class Platform : MonoBehaviour
     {
         heldInput = input;
 
-        if(!IsMoving && input != Vector2.zero)
+        if (!IsMoving && input != Vector2.zero)
         {
             TryPush(input);
         }
@@ -94,7 +97,7 @@ public class Platform : MonoBehaviour
         float distance = GetAllowedDistance(dir);
         if (distance <= 0.001f) return false;
 
-        targetPosition = transform.position + dir * distance;
+        targetPosition = logicalPosition + dir * distance;
         IsMoving = true;
         Pushed?.Invoke(this);
         return true;
@@ -105,28 +108,29 @@ public class Platform : MonoBehaviour
         float allowed = stepSize;
         int mask = 1 << gameObject.layer;
 
-        foreach(BoxCollider tile in tileColliders)
+        foreach (BoxCollider tile in tileColliders)
         {
             Transform t = tile.transform;
             Vector3 size = Vector3.Scale(tile.size, t.lossyScale);
-            Vector3 center = t.TransformPoint(tile.center);
-            Vector3 halfExtends = size * 0.5f - Vector3.one * skin;
+
+            Vector3 center = logicalPosition + (t.TransformPoint(tile.center) - transform.position);
+            Vector3 halfExtents = size * 0.5f - Vector3.one * skin;
 
             RaycastHit[] hits = Physics.BoxCastAll(
                 center,
-                halfExtends,
+                halfExtents,
                 dir,
                 t.rotation,
                 stepSize,
                 mask,
                 QueryTriggerInteraction.Ignore);
 
-            foreach(RaycastHit hit in hits)
+            foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.GetComponentInParent<Platform>() == this) continue;
 
                 float distanceToContact = hit.distance - skin;
-                if(distanceToContact < allowed)
+                if (distanceToContact < allowed)
                 {
                     allowed = Mathf.Max(0f, distanceToContact);
                 }
