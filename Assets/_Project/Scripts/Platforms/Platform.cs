@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(BoxCollider))]
 public class Platform : MonoBehaviour
 {
     [Header("Movement")]
@@ -13,9 +12,14 @@ public class Platform : MonoBehaviour
     [Tooltip("Small shrink of the cast box so platforms touching edge to edge do not count as overlapping.")]
     [SerializeField] private float skin = 0.02f;
 
+    [Header("Grid")]
+    [Tooltip("Distance covered by one step. Should match the tile size used to build platforms.")]
+    [SerializeField] private float stepSize = 4f;
+
+    private BoxCollider[] tileColliders;
+
     private readonly HashSet<PlatformRider> riders = new HashSet<PlatformRider>();
 
-    private BoxCollider boxCollider;
     private Vector3 targetPosition;
     private Vector2 heldInput;
 
@@ -27,7 +31,7 @@ public class Platform : MonoBehaviour
         body.isKinematic = true;
         body.useGravity = false;
 
-        boxCollider = GetComponent<BoxCollider>();
+        tileColliders = GetComponentsInChildren<BoxCollider>();
         targetPosition = transform.position;
     }
 
@@ -94,33 +98,34 @@ public class Platform : MonoBehaviour
 
     private float GetAllowedDistance(Vector3 dir)
     {
-        Vector3 size = Vector3.Scale(boxCollider.size, transform.lossyScale);
-        Vector3 center = transform.TransformPoint(boxCollider.center);
-
-        float stepLength = Mathf.Abs(dir.x) > 0f ? size.x : size.z;
-
-        Vector3 halfExtents = size * 0.5f - Vector3.one * skin;
+        float allowed = stepSize;
         int mask = 1 << gameObject.layer;
 
-        RaycastHit[] hits = Physics.BoxCastAll(
-            center,
-            halfExtents,
-            dir,
-            transform.rotation,
-            stepLength,
-            mask,
-            QueryTriggerInteraction.Ignore);
-
-        float allowed = stepLength;
-
-        foreach (RaycastHit hit in hits)
+        foreach(BoxCollider tile in tileColliders)
         {
-            if (hit.collider == boxCollider) continue;
+            Transform t = tile.transform;
+            Vector3 size = Vector3.Scale(tile.size, t.lossyScale);
+            Vector3 center = t.TransformPoint(tile.center);
+            Vector3 halfExtends = size * 0.5f - Vector3.one * skin;
 
-            float distanceToContact = hit.distance - skin;
-            if(distanceToContact < allowed)
+            RaycastHit[] hits = Physics.BoxCastAll(
+                center,
+                halfExtends,
+                dir,
+                t.rotation,
+                stepSize,
+                mask,
+                QueryTriggerInteraction.Ignore);
+
+            foreach(RaycastHit hit in hits)
             {
-                allowed = Mathf.Max(0f, distanceToContact);
+                if (hit.collider.GetComponentInParent<Platform>() == this) continue;
+
+                float distanceToContact = hit.distance - skin;
+                if(distanceToContact < allowed)
+                {
+                    allowed = Mathf.Max(0f, distanceToContact);
+                }
             }
         }
 
