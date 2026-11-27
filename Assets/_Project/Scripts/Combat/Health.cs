@@ -7,13 +7,17 @@ public struct DamageInfo
     public Vector3 HitDirection;
     public float KnockbackForce;
     public GameObject Source;
+    public bool IgnoreInvulnerability;
 
-    public DamageInfo(float ammount, Vector3 hitDirection = default, float knockbackForce = 0f, GameObject source = null)
+    public DamageInfo(float ammount, Vector3 hitDirection = default, 
+                        float knockbackForce = 0f, GameObject source = null,
+                        bool ignoreInvulnerability = false)
     {
         Ammount = ammount;
         HitDirection = hitDirection;
         KnockbackForce = knockbackForce;
         Source = source;
+        IgnoreInvulnerability = ignoreInvulnerability;
     }
 }
 
@@ -37,7 +41,7 @@ public class Health : MonoBehaviour
     public float Max => maxHealth;
     public bool IsDead {  get; private set; }
 
-    public event Action<float, float> Changed; //aktualne, maksymalne
+    public event Action<float, float> Changed;
     public event Action<DamageInfo> Damaged;
     public event Action Died;
 
@@ -60,7 +64,8 @@ public class Health : MonoBehaviour
 
     public bool TakeDamage(DamageInfo info)
     {
-        if (IsDead || info.Ammount <= 0f || IsInvulnerable) return false;
+        if (IsDead || info.Ammount <= 0f) return false;
+        if (!info.IgnoreInvulnerability && IsInvulnerable) return false;
 
         currentHealth = Mathf.Max(0f, currentHealth - info.Ammount);
         hitInvulnerableUntil = Time.time + iFramesAfterHit;
@@ -73,6 +78,11 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0f) Die();
         return true;
+    }
+
+    public bool InstaDeath()
+    {
+        return TakeDamage(new DamageInfo(currentHealth, Vector3.zero, 0f, null, true));
     }
 
     private void Die()

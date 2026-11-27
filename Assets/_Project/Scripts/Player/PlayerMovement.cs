@@ -14,11 +14,16 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private PlayerControls controls;
     private Vector2 moveInput;
+    private PlatformRider rider;
+    private Vector3 lastPlatformVelocity;
+    private EdgeGuard edgeGuard;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         controls = new PlayerControls();
+        rider = GetComponent<PlatformRider>();
+        edgeGuard = GetComponent<EdgeGuard>();
     }
 
     private void OnEnable() => controls.Player.Enable();
@@ -35,23 +40,39 @@ public class PlayerMovement : MonoBehaviour
     public float SpeedMultiplier { get; set; } = 1f;
     private void FixedUpdate()
     {
-        if (MovementLocked) return;
+        if (MovementLocked)
+        {
+            lastPlatformVelocity = Vector3.zero;
+            return;
+        }
+
+        Vector3 platformVelocity = rider != null ? rider.PlatformVelocity : Vector3.zero;
+        platformVelocity.y = 0f;
 
         Vector3 velocity = rb.linearVelocity;
-        Vector3 horizontal = new Vector3(velocity.x, 0f, velocity.z);
+
+        Vector3 horizontal = new Vector3(velocity.x, 0f, velocity.z) - lastPlatformVelocity;
         Vector3 desired = new Vector3(moveInput.x, 0f, moveInput.y) * maxSpeed * SpeedMultiplier;
 
         bool hasInput = moveInput.sqrMagnitude > 0.01f;
         float rate = hasInput ? acceleration : deceleration;
         horizontal = Vector3.MoveTowards(horizontal, desired, rate * Time.fixedDeltaTime);
+        if(edgeGuard != null) horizontal = edgeGuard.Constrain(horizontal);
 
-        rb.linearVelocity = new Vector3(horizontal.x, velocity.y, horizontal.z);
+        rb.linearVelocity = new Vector3(horizontal.x + platformVelocity.x, velocity.y,
+                                        horizontal.z + platformVelocity.z);
+        lastPlatformVelocity = platformVelocity;
         rb.angularVelocity = Vector3.zero;
 
-        if(hasInput && !RotationLocked)
+        if (hasInput && !RotationLocked)
         {
             Quaternion target = Quaternion.LookRotation(new Vector3(moveInput.x, 0f, moveInput.y));
             rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, target, turnSpeed * Time.fixedDeltaTime));
         }
+    }
+
+    public void ResetExternalVelocity()
+    {
+        lastPlatformVelocity = Vector3.zero;
     }
 }
