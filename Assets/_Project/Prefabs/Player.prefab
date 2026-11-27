@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 1801496871978223795}
   - component: {fileID: 4782832393814042299}
   - component: {fileID: 931374733767908434}
+  - component: {fileID: 7322378708700099571}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -275,6 +276,22 @@ MonoBehaviour:
     m_Bits: 8
   sampleInterval: 0.2
   edgeMargin: 0.7
+--- !u!114 &7322378708700099571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800926509984413320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff28d6b28b0ec64799bf429e8414a60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgeGuard
+  platformMask:
+    serializedVersion: 2
+    m_Bits: 8
+  probeDistance: 0.6
 --- !u!1 &4559603752626027393
 GameObject:
   m_ObjectHideFlags: 0

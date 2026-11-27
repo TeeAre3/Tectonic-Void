@@ -17,6 +17,7 @@ public class VoidRespawn : MonoBehaviour, IInvulnerabilityProvider
     private Health health;
     private PlatformRider rider;
     private PlayerDash dash;
+    private PlayerMovement movement;
 
     private Platform safePlatform;
     private Vector3 safeLocalPosition;
@@ -34,6 +35,7 @@ public class VoidRespawn : MonoBehaviour, IInvulnerabilityProvider
         health = GetComponent<Health>();
         rider = GetComponent<PlatformRider>();
         dash = GetComponent<PlayerDash>();
+        movement = GetComponent<PlayerMovement>();
         fallbackPosition = transform.position;
     }
 
@@ -76,10 +78,9 @@ public class VoidRespawn : MonoBehaviour, IInvulnerabilityProvider
             : fallbackPosition;
 
         rb.linearVelocity = Vector3.zero;
+        movement.ResetExternalVelocity();
         rb.position = target;
         transform.position = target;
         invulnerableUntil = Time.time + respawnInvulnerability;
-
-        Debug.Log($"Fell into the void: -{fallDamage} HP, respawn at {target}"); // tymczasowo
     }
 }

@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
     public float Max => maxHealth;
     public bool IsDead {  get; private set; }
 
-    public event Action<float, float> Changed; //aktualne, maksymalne
+    public event Action<float, float> Changed;
     public event Action<DamageInfo> Damaged;
     public event Action Died;
 
